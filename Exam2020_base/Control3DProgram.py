@@ -48,7 +48,7 @@ class GraphicsProgram3D:
         self.RIGHT_key_down = False
 
         self.light_position = Point(0.0, 0.0, -5.0)
-        self.light_position_factor = 0.0
+        self.light_position_factor = 10.0
         self.speed = 5.0
 
         self.light_sun      = Light(self.light_position, Color(0.9, 0.7, 0.3), Color(0.6, 0.4, 0.1), Color(0.3, 0.2, 0.2))
@@ -77,16 +77,18 @@ class GraphicsProgram3D:
 
         self.light_position_factor += delta_time * self.speed * pi / 10
         self.light_position.x = -cos(self.light_position_factor) * 5.0
-        self.light_position.y = -1.0 + sin(self.light_position_factor) * 5.0
+        self.light_position.y = 5.0 + sin(self.light_position_factor) * 5.0
 
         self.my_cube_position_factor += delta_time * pi
         self.my_cube_position.x = cos(self.my_cube_position_factor)
 
-        print(self.angle)
-        if self.floor_cube_pos.x >= -3:
-            self.floor_cube_pos += Vector(-1.0, 0.0, 0.0) * delta_time
-        else:
-            self.angle += pi / 2 * delta_time
+        #print(self.angle)
+        self.floor_cube_pos += Vector(sin(self.angle) * 3, 0.0, 0.0) * delta_time
+        self.angle += pi * delta_time
+        # if self.floor_cube_pos.x >= -3:
+        #     self.floor_cube_pos += Vector(-1.0, 0.0, 0.0) * delta_time
+        # else:
+        #     self.angle += pi / 2 * delta_time
         
 
     def move(self, pos, vector):
@@ -105,7 +107,7 @@ class GraphicsProgram3D:
         self.shader.set_projection_matrix(self.projection_matrix.get_matrix())
         self.shader.set_view_matrix(self.view_matrix.get_matrix())
         
-        self.shader.set_light(self.light_sun)
+        self.shader.set_light(self.light_white)
         self.shader.set_global_ambient(self.global_ambient)
         self.shader.set_eye_position(self.view_matrix.eye) # Added my code here
 
