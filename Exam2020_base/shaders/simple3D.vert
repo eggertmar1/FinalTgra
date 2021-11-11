@@ -6,13 +6,14 @@ uniform mat4 u_view_matrix;
 uniform mat4 u_projection_matrix;
 
 uniform vec4 u_light_position;
-// uniform vec4 u_light_diffuse; 
-// uniform vec4 u_mat_diffuse;
+uniform vec4 u_eye_position;
+
 varying vec4 v_normal;
 varying vec4 v_s;
+varying vec4 v_h;
+
 varying vec4 v_position;
 
-// varying vec4 v_color; // my code 
 void main(void)
 {
 	vec4 position = vec4(a_position.x, a_position.y, a_position.z, 1.0);
@@ -24,9 +25,9 @@ void main(void)
 	// global coordinates
 
 	v_s = normalize(u_light_position - position);
-
-	// float lambert = max(dot(v_normal, v_s), 0.0); // my code 
-	// v_color = u_light_diffuse * u_mat_diffuse * lambert; //my code
+	vec4 v = normalize(u_eye_position - position);
+	v_h = normalize(v_s + v);
+	// light calculations
 
 	position = u_view_matrix * position;
 	//eye coordinates
@@ -35,6 +36,5 @@ void main(void)
 	//clip coordinates
 
 	gl_Position = position;
-
 	v_position = position;
 }

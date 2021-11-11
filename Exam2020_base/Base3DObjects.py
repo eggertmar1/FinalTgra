@@ -1,22 +1,5 @@
 
-# try:
-#     try:
-#         from OpenGL.GL import * # this fails in <=2020 versions of Python on OS X 11.x
-#     except ImportError:
-#         print('Drat, patching for Big Sur')
-#         from ctypes import util
-#         orig_util_find_library = util.find_library
-#         def new_util_find_library( name ):
-#             res = orig_util_find_library( name )
-#             if res: return res
-#             return '/System/Library/Frameworks/'+name+'.framework/'+name
-#         util.find_library = new_util_find_library
-#         from OpenGL.GL import *
-# except ImportError:
-#     pass
-
 from OpenGL.GL import *
-from OpenGL.GLU import *
 
 import numpy
 
@@ -34,6 +17,9 @@ class Point:
 
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y, self.z - other.z)
+    
+    def __str__(self):
+        return f"x:{self.x} y:{self.y} z:{self.z}"
 
 class Vector:
     def __init__(self, x, y, z):
@@ -72,11 +58,19 @@ class Color:
         self.b = b
 
 class Material:
-    def __init__(self, diffuse = None, specular = None, shininess = None):
+    def __init__(self, diffuse = None, specular = None, shininess = None, emission = None, ambient = None):
         self.diffuse = Color(0.0, 0.0, 0.0) if diffuse == None else diffuse
         self.specular = Color(0.0, 0.0, 0.0) if specular == None else specular
+        self.emission = Color(0.0, 0.0, 0.0) if emission == None else emission
+        self.ambient = Color(0.0, 0.0, 0.0) if ambient == None else ambient
         self.shininess = 1 if shininess == None else shininess
 
+class Light:
+    def __init__(self, pos = None, diffuse = None, specular = None, ambient = None):
+        self.pos = Point(0.0, 0.0, 0.0) if pos == None else pos
+        self.diffuse = Color(0.0, 0.0, 0.0) if diffuse == None else diffuse
+        self.specular = Color(0.0, 0.0, 0.0) if specular == None else specular
+        self.ambient = Color(0.0, 0.0, 0.0) if ambient == None else ambient
 class Cube:
     def __init__(self):
         vertex_array = [-0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
